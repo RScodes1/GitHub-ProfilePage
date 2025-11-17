@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ECharts from 'echarts-for-react';
-import { Hedvig_Letters_Sans } from "next/font/google";
 import { getUserProfile } from "./lib/github";
 import GitHubTabs from "./components/githubTabs";
-import { callbackify } from "util";
+// import { useGitHub } from "./context/GitHubContext";
+
 
 export default function GitHubProfilePage() {
 
@@ -13,6 +13,7 @@ export default function GitHubProfilePage() {
           heatMapData: [],
           range: ["", ""]
         });
+  // const { setUserData, setRepos } = useGitHub();
 
     const [user, setUser] = useState<any>(null);
     const [active, setActive] = useState("overview");
@@ -250,19 +251,22 @@ const repoInfo = [
                 <h1 className="mt-3 text-left text-xl font-semibold">{user.name}</h1>
                 <p className="text-left text-gray-600">{user.login}</p>
           </div>
-          <div className="bg-white p-4 rounded-xl ">
-            <p className="text-gray-700 text-sm">{user.bio}</p>
-            <p className="text-center h-10 bg-gray-100 border-gray-100 rounded p-2 mt-3 border" >Edit profile</p>
+          <div className="bg-white p-4 mt-[-30] rounded-xl ">
+            <p className="text-gray-800 text-sm">{user.bio}</p>
+            <p className="text-center hover:bg-gray-200 h-10 bg-gray-100 border-gray-100 rounded p-2 mt-3 border" >Edit profile</p>
              <div className="flex items-center gap-3 text-sm mt-3">
           <a href={user.followers_url} target="_blank">
-            <b>{user.followers}</b> followers <span className="text-center">.</span>
+            <div className="flex gap-1" >
+            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-people"><path d="M2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4 4 0 0 0-7.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 3.102 8.05 3.493 3.493 0 0 1 2 5.5ZM11 4a3.001 3.001 0 0 1 2.22 5.018 5.01 5.01 0 0 1 2.56 3.012.749.749 0 0 1-.885.954.752.752 0 0 1-.549-.514 3.507 3.507 0 0 0-2.522-2.372.75.75 0 0 1-.574-.73v-.352a.75.75 0 0 1 .416-.672A1.5 1.5 0 0 0 11 5.5.75.75 0 0 1 11 4Zm-5.5-.5a2 2 0 1 0-.001 3.999A2 2 0 0 0 5.5 3.5Z"></path> </svg>
+            <b>{user.followers}</b>followers<span className="text-center">.</span>
+            </div>
           </a>
           <a href={`${user.html_url}?tab=following`} target="_blank">
             <b>{user.following}</b> following
           </a>
         </div>
           </div>
-          <div className="bg-white p-4 rounded-xl ">
+          <div className="bg-white p-4 mt-[-20] rounded-xl ">
             <ul className="space-y-1 text-sm text-gray-700">
               <li className="flex gap-2">
                 <svg className="octicon octicon-organization" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M1.75 16A1.75 1.75 0 0 1 0 14.25V1.75C0 .784.784 0 1.75 0h8.5C11.216 0 12 .784 12 1.75v12.5c0 .085-.006.168-.018.25h2.268a.25.25 0 0 0 .25-.25V8.285a.25.25 0 0 0-.111-.208l-1.055-.703a.749.749 0 1 1 .832-1.248l1.055.703c.487.325.779.871.779 1.456v5.965A1.75 1.75 0 0 1 14.25 16h-3.5a.766.766 0 0 1-.197-.026c-.099.017-.2.026-.303.026h-3a.75.75 0 0 1-.75-.75V14h-1v1.25a.75.75 0 0 1-.75.75Zm-.25-1.75c0 .138.112.25.25.25H4v-1.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v1.25h2.25a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25ZM3.75 6h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5ZM3 3.75A.75.75 0 0 1 3.75 3h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 3.75Zm4 3A.75.75 0 0 1 7.75 6h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7 6.75ZM7.75 3h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5ZM3 9.75A.75.75 0 0 1 3.75 9h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 9.75ZM7.75 9h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Z"></path></svg>
@@ -276,17 +280,22 @@ const repoInfo = [
 
               <li className="flex gap-2">
                  <svg className="octicon octicon-mail" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25v-8.5C0 2.784.784 2 1.75 2ZM1.5 12.251c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V5.809L8.38 9.397a.75.75 0 0 1-.76 0L1.5 5.809v6.442Zm13-8.181v-.32a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25v.32L8 7.88Z"></path></svg>
-                <div>
+                  <a
+                    className="hover:text-blue-500 text-sm block"
+                    href="mailto:kushwaha.shreeram@gmail.com" target="_blank">
+                     <div>
                       kushwaha.shreeram@gmail.com
-                 </div> 
-                
+                    </div>       
+                  </a>
+                 
+                   
               </li>
 
              <li className="flex gap-2">
                  <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-link"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
                  {user.blog && (
                   <a
-                    className="text-blue-600 text-sm mt-2 block"
+                      className="hover:text-blue-500 text-sm block"
                     href={user.blog.startsWith("http") ? user.blog : `https://${user.blog}`}
                     target="_blank"
                   >
@@ -297,13 +306,18 @@ const repoInfo = [
 
               <li className="flex gap-2">
              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" role="img" aria-labelledby="a5vg6xrnqp421t2bs6155uiokeajtre5" className="octicon"><title id="a5vg6xrnqp421t2bs6155uiokeajtre5">LinkedIn</title><g clipPath="url(#clip0_202_91845)"><path d="M14.5455 0H1.45455C0.650909 0 0 0.650909 0 1.45455V14.5455C0 15.3491 0.650909 16 1.45455 16H14.5455C15.3491 16 16 15.3491 16 14.5455V1.45455C16 0.650909 15.3491 0 14.5455 0ZM5.05746 13.0909H2.912V6.18764H5.05746V13.0909ZM3.96291 5.20073C3.27127 5.20073 2.712 4.64 2.712 3.94982C2.712 3.25964 3.272 2.69964 3.96291 2.69964C4.65236 2.69964 5.21309 3.26036 5.21309 3.94982C5.21309 4.64 4.65236 5.20073 3.96291 5.20073ZM13.0938 13.0909H10.9498V9.73382C10.9498 8.93309 10.9353 7.90327 9.83491 7.90327C8.71855 7.90327 8.54691 8.77527 8.54691 9.67564V13.0909H6.40291V6.18764H8.46109V7.13091H8.49018C8.77673 6.58836 9.47636 6.016 10.52 6.016C12.6924 6.016 13.0938 7.44582 13.0938 9.30473V13.0909V13.0909Z" fill="currentColor"></path></g></svg>
-               <div>in/shreeramkushwaha</div>
+               <a
+                   className="hover:text-blue-500 text-sm block"
+               href="https://t.co/wyp2OnWr7e">
+                  <div>in/shreeramkushwaha</div>
+                </a>
+            
               </li>
               <li className="flex gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" width="16" height="16" role="img" aria-labelledby="ap27q8c3cphxvth4eexd7syzqsbhrour" className="octicon"><title id="ap27q8c3cphxvth4eexd7syzqsbhrour">X</title><path fill="currentColor" d="M9.332 6.925 14.544 1h-1.235L8.783 6.145 5.17 1H1l5.466 7.78L1 14.993h1.235l4.78-5.433 3.816 5.433H15L9.332 6.925ZM7.64 8.848l-.554-.775L2.68 1.91h1.897l3.556 4.975.554.775 4.622 6.466h-1.897L7.64 8.848Z"></path></svg>
                  {user.twitter_username && (
                     <a
-                      className="text-blue-500 text-sm block mt-1"
+                      className="hover:text-blue-500 text-sm block"
                       href={`https://twitter.com/${user.twitter_username}`}
                       target="_blank"
                     >
@@ -324,32 +338,13 @@ const repoInfo = [
             <a href="/shreeramk?achievement=yolo&amp;tab=achievements" className="position-relative">
                 <img src="https://github.githubassets.com/assets/yolo-default-be0bbff04951.png" data-hovercard-type="achievement" data-hovercard-url="/users/shreeramk/achievements/yolo/detail?hovercard=1" width="64" alt="Achievement: YOLO" data-view-component="true" className="achievement-badge-sidebar" aria-keyshortcuts="Alt+ArrowUp"></img>
           </a>
-            <a href="/shreeramk?achievement=pull-shark&amp;tab=achievements" className="position-relative">
-             <div className="relative inline-block">
-                <img
-                  src="https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png"
-                  data-hovercard-type="achievement"
-                  data-hovercard-url="/users/shreeramk/achievements/pull-shark/detail?hovercard=1"
-                  width="64"
-                  alt="Achievement: Pull Shark"
-                  data-view-component="true"
-                  className="achievement-badge-sidebar"
-                  aria-keyshortcuts="Alt+ArrowUp"
-                />
-                  <span
-                    data-view-component="true"
-                    className="Label achievement-tier-label achievement-tier-label--gold text-small text-yello text-bold color-shadow-medium px-2 py-0 mb-1 position-absolute right-0 bottom-0"
-                  >
-                  x4
-                </span>
-              </div>
-
-            </a>
+             <a href="/shreeramk?achievement=pull-shark&amp;tab=achievements" className="position-relative"><img src="https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png" data-hovercard-type="achievement" data-hovercard-url="/users/shreeramk/achievements/pull-shark/detail?hovercard=1" width="64" alt="Achievement: Pull Shark" data-view-component="true" className="achievement-badge-sidebar" aria-keyshortcuts="Alt+ArrowUp"></img>
+             <span data-view-component="true" className="Label achievement-tier-label achievement-tier-label--gold text-small text-bold color-shadow-medium px-2 py-0 mb-1 position-absolute right-0 bottom-0">x4</span></a>
               </div>
           </div>
            <div>
                <h2 className="h4 mb-2">
-               <a href="/shreeramk?tab=achievements" className="Link--primary mb-2">Achievements</a>
+               <a href="/shreeramk?tab=achievements" className="Link--primary mb-2">Organisations</a>
             </h2>
            </div>
         </aside>
@@ -362,19 +357,21 @@ const repoInfo = [
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {repoInfo.map((repo, index) => (
                   <div key={index} className="bg-white border-gray-200 p-4 rounded-xl  border">
-                <h3 className="font-medium text-blue-800 flex items-center gap-2">
+                <div className="flex"> 
+                   <h3 className="font-medium text-blue-800  hover:underline underline-offset-2 cursor-pointer flex items-center gap-2">
                   {repo.repo_name}
+                  </h3>
                   <div className="ml-auto">
-                  <span className="text-xs text-black px-2 py-0.5 border-gray-200 rounded-full border">Public</span>
+                      <span className="pointer-events-none text-xs text-black px-2 py-0.5 border-gray-200 rounded-full border">Public</span>
                   </div>
-                </h3>
+                </div>
 
                 {repo.forked_from && (
                  <p className="text-xs text-gray-500 mt-1">
                   forked from{" "}
                   <a
                     href={repo.forked_from}
-                    className="underline text-gray-500 hover:text-gray-700"
+                    className="underline text-gray-500 hover:text-blue-700 "
                   >
                     {repo.forked_from}
                   </a>
@@ -398,120 +395,155 @@ const repoInfo = [
           </div>
 
           {/* CONTRIBUTION GRAPH */}
-          <div className="bg-white p-4 rounded-xl ">
+          <div className="bg-white p-4 rounded-xl "> 
+              <h2 className="text-m mt-5"> 
+                  {total && (
+                <span>
+                  {total}
+                </span>
+              )} contributions in the last year</h2>
+  
+          <div className="flex gap-6 items-start">
+          {/* LEFT: Heatmap card */}
+           <div className="flex-1 max-w-[750px] flex flex-col">
 
-                  {/* Optional total contributions count */}
-                 
-                  <h2 className="text-sm mb-2 "> 
-                     {total && (
-                    <span>
-                      {total}
-                    </span>
-                  )} contributions in the last year</h2>
+  {/* RIGHT-ALIGNED DROPDOWN */}
+  <div className="inline-flex items-center px-2 py-1 ml-auto mt-[-20] hover:text-blue-400 rounded-md">
+    <p className="mr-2 text-right text-gray-600 text-sm">
+      Contribution settings
+    </p>
+    <svg
+      aria-hidden="true"
+      height="16"
+      width="16"
+      viewBox="0 0 16 16"
+      className="octicon octicon-triangle-down"
+    >
+      <path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"/>
+    </svg>
+  </div>
+
+  {/* MAIN BOX */}
+  <div className="border rounded-md border-gray-100 flex flex-col gap-3 mt-3">
+
+    {/* CHART */}
+    <div className="w-full h-[220px] mt-[-70] p-1">
+      <ECharts
+        style={{ width: "100%", height: "100%" }}
+        option={{
+          tooltip: {
+            position: "top",
+            formatter: (p: { data: [string, number] }) => {
+              const [date, count] = p.data;
+              const [y, m, d] = date.split("-");
+              const day = parseInt(d, 10);
+              const monthName = [
+                "January","February","March","April","May","June",
+                "July","August","September","October","November","December"
+              ][parseInt(m, 10) - 1];
+              const suffix =
+                day % 10 === 1 && day !== 11 ? "st" :
+                day % 10 === 2 && day !== 12 ? "nd" :
+                day % 10 === 3 && day !== 13 ? "rd" : "th";
+              return `${count} contributions on ${monthName} ${day}${suffix}`;
+            }
+          },
+
+          visualMap: {
+            min: 0,
+            max: 20,
+            show: false,
+            inRange: {
+              color: ["#ebedf0","#9be9a8","#40c463","#30a14e","#216e39"]
+            }
+          },
+
+          calendar: {
+            top: 125,
+            left: 40,
+            right: 10,
+            bottom: 10,
+            cellSize: [12, 12],
+            range: githubData.range || ['2024-01-01','2024-12-31'],
+            orient: "horizontal",
+            splitLine: { show: false },
+            itemStyle: { borderWidth: 1, borderColor: "#fff" },
+            yearLabel: { show: false },
+            monthLabel: { nameMap: "en", margin: 10, fontSize: 11 },
+            dayLabel: {
+              margin: 8,
+              fontSize: 12,
+              nameMap: ["", "Mon", "", "Wed", "", "Fri", ""],
+            }
+          },
+
+          series: [
+            {
+              type: "heatmap",
+              coordinateSystem: "calendar",
+              data: githubData.heatMapData,
+            }
+          ]
+        }}
+      />
+    </div>
+
+    <p className="text-xs ml-11 mt-[-14] mb-5 hover:text-blue-400 text-gray-600">
+      Learn how we count contributions
+    </p>
+       <p className="text-xs mt-[-48] mr-18 mb-5 hover:text-blue-400 text-right text-gray-600">
+      Less More
+    </p>
+
+  </div>
+</div>
 
 
-            <div className="flex">
-              <div className="w-[850px] h-[150px]">
-              <div className="border border-gray-100 rounded-md flex flex-col gap-3">
-                    <ECharts
-                option={{
-                  tooltip: {
-                    position: "top",
-             formatter: (p: {data : [string, number]}) => {
-                  const [date, count] = p.data;    // date = "2024-08-12"
+          {/* RIGHT: Year selector */}
+          <div className="w-28 mt-[-25] ">
+            <div className="p-2">
+              <ul className="space-y-3 text-sm pl-1">
+                {["2025","2024","2023","2022","2021","2020","2019","2018","2017","2016","2015","2014","2013"].map((y, idx) => (
+                    <li
+                      key={y}
+                      className={`text-center px-2 py-2 rounded-md text-sm ${
+                        idx === 0 ? "bg-blue-600 text-white font-medium" : "bg-white hover:bg-gray-100 text-gray-700"
+                      }`}
+                        >
+                          {y}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
 
-                  const [year, month, dayStr] = date.split("-");
-                  const day = parseInt(dayStr, 10);
-                  const monthIndex = parseInt(month, 10) - 1; // convert "08" → 7
-
-                  const monthName = [
-                    "January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
-                  ][monthIndex];
-
-                  // day suffix logic
-                  const suffix =
-                    day % 10 === 1 && day !== 11 ? "st" :
-                    day % 10 === 2 && day !== 12 ? "nd" :
-                    day % 10 === 3 && day !== 13 ? "rd" : "th";
-
-                  return `${count} contributions on ${monthName} ${day}${suffix}`;
-                }
-
-
-                  },
-
-                  visualMap: {
-                    min: 0,
-                    max: 20,
-                    show: false,
-                    inRange: {
-                      color: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"]
-                    }
-                  },
-
-                  calendar: {
-                    top: 125,
-                    left: 40,
-                    right: 0,
-                    bottom: 60,
-                    cellSize: [12, 12],                 // square cells
-                    range: githubData.range || ['2024-01-01', '2024-12-31'],
-                    orient: "horizontal",
-                    splitLine: { show: false },
-                    itemStyle: {
-                      borderWidth: 1,
-                      borderColor: "#fff"
-                    },
-
-                    yearLabel: { show: false },
-
-                    monthLabel: {
-                      nameMap: "en",
-                      margin: 15,
-                      fontSize: 11
-                    },
-
-                    dayLabel: {
-                        margin: 8,
-                        fontSize: 12,
-                       nameMap: ["", "Mon", "", "Wed", "", "Fri", ""],
-                    }
-                  },
-
-                  series: [
-                    {
-                      type: "heatmap",
-                      coordinateSystem: "calendar",
-                      data: githubData.heatMapData
-                    }
-                  ]
-                }}
-              />
-                  <p>Learn how we count contributions</p>
-                 </div>
-               </div>
-             <div className="w-28 bg-50 border black-100 p-2 rounded-md">
-                <ul className="space-y-3 text-sm pl-1">
-                <li className="bg-blue-600 text-white p-2 rounded-md font-medium text-center">2025</li>
-                <li className="bg-white-100  hover:bg-gray-200 p-2 rounded-md text-center">2024</li>
-                <li className="bg-white-100   hover:bg-gray-200p-2 rounded-md text-center">2023</li>
-                <li className="bg-white-100  hover:bg-gray-200 p-2 rounded-md text-center">2022</li>
-                <li className="bg-white-100   hover:bg-gray-200p-2 rounded-md text-center">2021</li>
-                <li className="bg-white-100  hover:bg-gray-200 p-2 rounded-md text-center">2020</li>
-                <li className="bg-white-100   hover:bg-gray-200p-2 rounded-md text-center">2019</li>
-                <li className="bg-white-100  hover:bg-gray-200 p-2 rounded-md text-center">2018</li>
-                <li className="bg-white-100  hover:bg-gray-200 p-2 rounded-md text-center">2017</li>
-                <li className="bg-white-100   hover:bg-gray-200p-2 rounded-md text-center">2016</li>
-                <li className="bg-white-100  hover:bg-gray-200 p-2 rounded-md text-center">2015</li>
-                <li className="bg-white-100  hover:bg-gray-200 p-2 rounded-md text-center">2014</li>
-                <li className="bg-white-100  hover:bg-gray-200 p-2 rounded-md text-center">2013</li>
-                </ul>
-               </div>
-            </div>
           </div>
         </section>
       </main>
+      <footer className="mt-10 py-6 border-t border-gray-200 text-gray-500">
+  <div className="max-w-6xl mx-auto flex items-center justify-center gap-6 text-sm">
+
+    {/* GitHub logo */}
+   <svg aria-hidden="true" height="24" viewBox="0 0 24 24" version="1.1" width="24" data-view-component="true" className="octicon octicon-mark-github">
+    <path d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.127-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.663 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.432 0-1.196.426-2.186 1.128-2.956-.111-.275-.496-1.402.11-2.915 0 0 .921-.288 3.024 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.513.221 2.64.111 2.915.701.77 1.127 1.747 1.127 2.956 0 4.222-2.571 5.157-5.019 5.432.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"></path>
+</svg>
+
+    <span>© 2025 GitHub, Inc.</span>
+
+    {/* Links */}
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Terms</a>
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Privacy</a>
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Security</a>
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Status</a>
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Community</a>
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Docs</a>
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Contact</a>
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Manage cookies</a>
+    <a className="hover:text-blue-700 hover:underline underline-offset-2 cursor-pointer" href="#">Do not share my personal information</a>
+  </div>
+</footer>
+
     </div>
   );
 }
