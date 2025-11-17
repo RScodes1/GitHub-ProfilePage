@@ -417,7 +417,7 @@ const repoInfo = [
                 option={{
                   tooltip: {
                     position: "top",
-             formatter: (p) => {
+             formatter: (p: {data : [string, number]}) => {
                   const [date, count] = p.data;    // date = "2024-08-12"
 
                   const [year, month, dayStr] = date.split("-");
