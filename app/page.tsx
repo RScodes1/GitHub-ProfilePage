@@ -9,11 +9,33 @@ import { callbackify } from "util";
 
 export default function GitHubProfilePage() {
 
-   const [githubData, setGithubData] = useState([]);
+  const [githubData, setGithubData] = useState<GithubDataState>({
+          heatMapData: [],
+          range: ["", ""]
+        });
+
     const [user, setUser] = useState<any>(null);
     const [active, setActive] = useState("overview");
     const [total, setTotal] = useState(0);
   const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+
+  interface ContributionDay {
+  date: string;
+  contributionCount: number;
+}
+interface GithubDataState {
+  heatMapData: [string, number][];
+  range: [string, string];
+}
+
+interface ContributionWeek {
+  contributionDays: ContributionDay[];
+}
+
+interface ContributionCalendar {
+  totalContributions: number;
+  weeks: ContributionWeek[];
+}
 
 
  async function getContributions(username: string) {
@@ -59,21 +81,23 @@ export default function GitHubProfilePage() {
 useEffect(() => {
   async function fetchData() {
     const username = "shreeramk";
-    const calendar = await getContributions(username);
-  console.log({calendar});
-  setTotal(calendar.totalContributions);
-    const heatMapData = [];
+    const calendar = await getContributions(username)as ContributionCalendar;
+;
 
-    calendar.weeks.forEach(week => {
-      week.contributionDays.forEach(day => {
+    console.log({ calendar });
+    setTotal(calendar.totalContributions);
+
+    const heatMapData: [string, number][] = [];
+
+    calendar.weeks.forEach((week: ContributionWeek) => {
+      week.contributionDays.forEach((day : ContributionDay ) => {
         heatMapData.push([
-          day.date,               // YYYY-MM-DD
-          day.contributionCount   // number
+          day.date,              // YYYY-MM-DD
+          day.contributionCount  // number
         ]);
       });
     });
 
-    // also compute the range:
     const start = heatMapData[0][0];
     const end = heatMapData[heatMapData.length - 1][0];
 
