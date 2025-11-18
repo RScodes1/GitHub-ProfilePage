@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const tabs = [
   { key: "overview", label: "Overview", svg : (<svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-book UnderlineNav-octicon">
@@ -20,38 +20,97 @@ const tabs = [
 </svg>)}
 ];
 
+
+
 export default function GitHubTabs() {
   const [active, setActive] = useState("overview");
+  const [visibleTabs, setVisibleTabs] = useState(tabs);
+  const [overflowTabs, setOverflowTabs] = useState([]);
+  const containerRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current) return;
+      const containerWidth = containerRef.current.offsetWidth;
+      let usedWidth = 0;
+      const tempVisible: typeof tabs = [];
+      const tempOverflow: typeof tabs = [];
+
+      tabs.forEach((tab) => {
+        const tabWidth = 100; 
+        if (usedWidth + tabWidth <= containerWidth - 40) { 
+          tempVisible.push(tab);
+          usedWidth += tabWidth;
+        } else {
+          tempOverflow.push(tab);
+        }
+      });
+
+      setVisibleTabs(tempVisible);
+      setOverflowTabs(tempOverflow);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const [overflowOpen, setOverflowOpen] = useState(false);
 
   return (
-    <div>
-      <ul className="flex gap-8 ml-5 text-sm">
-        {tabs.map((tab) => (
-           
+    <div className="relative">
+      <ul className="flex gap-2 ml-5 text-sm" ref={containerRef}>
+        {visibleTabs.map(tab => (
           <li
             key={tab.key}
             onClick={() => setActive(tab.key)}
-            className="
-            flex gap-2 items-center
-            hover:bg-gray-300
-             rounded
-              mt-[-1]
-              mb-1
-
-              relative p-1 cursor-pointer 
-              text-gray-700 hover:text-gray-900
-            "
+            className={`flex gap-2 items-center px-2 py-1 cursor-pointer rounded hover:bg-gray-200 ${
+              active === tab.key ? "font-medium text-gray-900" : "text-gray-700"
+            }`}
           >
             {tab.svg}
             {tab.label}
-
-            {/* underline */}
-            {active === tab.key && (
-              <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-orange-500"></span>
-            )}
           </li>
         ))}
+
+        {overflowTabs.length > 0 && (
+          <li className="relative">
+            <button
+              onClick={() => setOverflowOpen(!overflowOpen)}
+              className="px-2 py-1 rounded hover:bg-gray-200"
+            >
+              ⋯
+            </button>
+            {overflowOpen && (
+              <ul className="absolute right-0 mt-1 w-40 bg-white border rounded-md shadow-lg z-50">
+                {overflowTabs.map(tab => (
+                  <li
+                    key={tab.key}
+                    onClick={() => {
+                      setActive(tab.key);
+                      setOverflowOpen(false);
+                    }}
+                    className={`px-2 py-1 cursor-pointer hover:bg-gray-100 ${
+                      active === tab.key ? "font-medium" : "text-gray-700"
+                    }`}
+                  >
+                    {tab.svg}
+                    {tab.label}
+
+                      {active === tab.key && (
+                        <span className="absolute left-0 right-0 bottom-0 h-0.5 bg-orange-500">
+                          {tab.key === "repositories" ? 8 : tab.key === "stars" ? 5 : null}
+                        </span>
+                      )}
+
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        )}
       </ul>
     </div>
   );
 }
+

@@ -4,8 +4,7 @@ import React, { useEffect, useState } from "react";
 import ECharts from 'echarts-for-react';
 import { getUserProfile } from "./lib/github";
 import GitHubTabs from "./components/githubTabs";
-// import { useGitHub } from "./context/GitHubContext";
-
+// import { useGitHub } from "./context/GithubContext";
 
 export default function GitHubProfilePage() {
 
@@ -13,10 +12,9 @@ export default function GitHubProfilePage() {
           heatMapData: [],
           range: ["", ""]
         });
-  // const { setUserData, setRepos } = useGitHub();
+
 
     const [user, setUser] = useState<any>(null);
-    const [active, setActive] = useState("overview");
     const [total, setTotal] = useState(0);
   const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
 
@@ -93,8 +91,8 @@ useEffect(() => {
     calendar.weeks.forEach((week: ContributionWeek) => {
       week.contributionDays.forEach((day : ContributionDay ) => {
         heatMapData.push([
-          day.date,              // YYYY-MM-DD
-          day.contributionCount  // number
+          day.date,             
+          day.contributionCount
         ]);
       });
     });
@@ -112,7 +110,6 @@ useEffect(() => {
 }, []);
 
 
- 
 
   useEffect(() => {
     async function fetchData() {
@@ -182,68 +179,85 @@ const repoInfo = [
           </div>
       
         <div className="flex items-center gap-4">
-          <div className="flex gap-2" > 
-            <div className="relative w-70">
-              {/* Search Icon */}
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-black-400">
-                  <svg
-                    aria-hidden="true"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    width="16"
-                    className="octicon octicon-search"
-                  >
-                    <path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path>
-                  </svg>
-                </span>
+         <div className="flex flex-wrap gap-2 items-center">
+  {/* SEARCH BOX */}
+  <div className="relative flex-1 min-w-[150px] lg:w-70">
+    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-black-400">
+      <svg
+        aria-hidden="true"
+        height="16"
+        width="16"
+        viewBox="0 0 16 16"
+        className="octicon octicon-search"
+      >
+        <path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"></path>
+      </svg>
+    </span>
+    <input
+      type="text"
+      placeholder="Type to / search"
+      className="w-full pl-10 h-8 py-2 border rounded-md focus:outline-none text-sm"
+    />
+  </div>
 
-                {/* Input with slash inside placeholder */}
-                <input
-                  type="text"
-                  placeholder="Type to / search"
-                  className="w-full pl-10 h-8 py-2 border rounded-md focus:outline-none"
-                />
-              </div>
-            <div className="border-gray-200 p-2 h-8 w-14 rounded border" >
-                <span className="flex gap-1 justify-between" >
-                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-copilot Button-visual">
-                            <path d="M7.998 15.035c-4.562 0-7.873-2.914-7.998-3.749V9.338c.085-.628.677-1.686 1.588-2.065.013-.07.024-.143.036-.218.029-.183.06-.384.126-.612-.201-.508-.254-1.084-.254-1.656 0-.87.128-1.769.693-2.484.579-.733 1.494-1.124 2.724-1.261 1.206-.134 2.262.034 2.944.765.05.053.096.108.139.165.044-.057.094-.112.143-.165.682-.731 1.738-.899 2.944-.765 1.23.137 2.145.528 2.724 1.261.566.715.693 1.614.693 2.484 0 .572-.053 1.148-.254 1.656.066.228.098.429.126.612.012.076.024.148.037.218.924.385 1.522 1.471 1.591 2.095v1.872c0 .766-3.351 3.795-8.002 3.795Zm0-1.485c2.28 0 4.584-1.11 5.002-1.433V7.862l-.023-.116c-.49.21-1.075.291-1.727.291-1.146 0-2.059-.327-2.71-.991A3.222 3.222 0 0 1 8 6.303a3.24 3.24 0 0 1-.544.743c-.65.664-1.563.991-2.71.991-.652 0-1.236-.081-1.727-.291l-.023.116v4.255c.419.323 2.722 1.433 5.002 1.433ZM6.762 2.83c-.193-.206-.637-.413-1.682-.297-1.019.113-1.479.404-1.713.7-.247.312-.369.789-.369 1.554 0 .793.129 1.171.308 1.371.162.181.519.379 1.442.379.853 0 1.339-.235 1.638-.54.315-.322.527-.827.617-1.553.117-.935-.037-1.395-.241-1.614Zm4.155-.297c-1.044-.116-1.488.091-1.681.297-.204.219-.359.679-.242 1.614.091.726.303 1.231.618 1.553.299.305.784.54 1.638.54.922 0 1.28-.198 1.442-.379.179-.2.308-.578.308-1.371 0-.765-.123-1.242-.37-1.554-.233-.296-.693-.587-1.713-.7Z"></path><path d="M6.25 9.037a.75.75 0 0 1 .75.75v1.501a.75.75 0 0 1-1.5 0V9.787a.75.75 0 0 1 .75-.75Zm4.25.75v1.501a.75.75 0 0 1-1.5 0V9.787a.75.75 0 0 1 1.5 0Z"></path>
-                      </svg>
-                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-triangle-down Button-visual">
-                          <path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path>
-                      </svg>
-                  </span>
-               </div>
-            <div className="border-gray-200 p-2 h-8 w-14 rounded border" >
+  {/* RIGHT ICONS */}
+  <div className="flex gap-2 items-center">
+    {/* Extra icons hidden on small screens */}
+    <div className="hidden lg:flex gap-2">
+      <div className="border-gray-200 p-2 h-8 w-14 rounded border flex items-center justify-between cursor-pointer">
+        {/* Copilot Icon */}
+       <svg aria-hidden="true" height="16" viewBox="0 0 15 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-copilot Button-visual">
+    <path d="M7.998 15.035c-4.562 0-7.873-2.914-7.998-3.749V9.338c.085-.628.677-1.686 1.588-2.065.013-.07.024-.143.036-.218.029-.183.06-.384.126-.612-.201-.508-.254-1.084-.254-1.656 0-.87.128-1.769.693-2.484.579-.733 1.494-1.124 2.724-1.261 1.206-.134 2.262.034 2.944.765.05.053.096.108.139.165.044-.057.094-.112.143-.165.682-.731 1.738-.899 2.944-.765 1.23.137 2.145.528 2.724 1.261.566.715.693 1.614.693 2.484 0 .572-.053 1.148-.254 1.656.066.228.098.429.126.612.012.076.024.148.037.218.924.385 1.522 1.471 1.591 2.095v1.872c0 .766-3.351 3.795-8.002 3.795Zm0-1.485c2.28 0 4.584-1.11 5.002-1.433V7.862l-.023-.116c-.49.21-1.075.291-1.727.291-1.146 0-2.059-.327-2.71-.991A3.222 3.222 0 0 1 8 6.303a3.24 3.24 0 0 1-.544.743c-.65.664-1.563.991-2.71.991-.652 0-1.236-.081-1.727-.291l-.023.116v4.255c.419.323 2.722 1.433 5.002 1.433ZM6.762 2.83c-.193-.206-.637-.413-1.682-.297-1.019.113-1.479.404-1.713.7-.247.312-.369.789-.369 1.554 0 .793.129 1.171.308 1.371.162.181.519.379 1.442.379.853 0 1.339-.235 1.638-.54.315-.322.527-.827.617-1.553.117-.935-.037-1.395-.241-1.614Zm4.155-.297c-1.044-.116-1.488.091-1.681.297-.204.219-.359.679-.242 1.614.091.726.303 1.231.618 1.553.299.305.784.54 1.638.54.922 0 1.28-.198 1.442-.379.179-.2.308-.578.308-1.371 0-.765-.123-1.242-.37-1.554-.233-.296-.693-.587-1.713-.7Z"></path><path d="M6.25 9.037a.75.75 0 0 1 .75.75v1.501a.75.75 0 0 1-1.5 0V9.787a.75.75 0 0 1 .75-.75Zm4.25.75v1.501a.75.75 0 0 1-1.5 0V9.787a.75.75 0 0 1 1.5 0Z"></path>
+</svg>
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-triangle-down Button-visual">
+    <path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path>
+</svg>
+      </div>
 
-                <span className=" flex gap-1 justify-between" >
-                    <span className="Button-visual Button-leadingVisual">
-                      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-plus"><path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z"></path>
-                      </svg>
-                    </span>
-                    
-                <span className="Button-label"><svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-triangle-down">
-                    <path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path></svg>
-                  </span>
-             </span>
-             </div>
-            <div className="text-gray-300 border-gray-200 p-2 h-8 w-8 rounded border" >
-                   <svg aria-hidden="true" height="16" widths = "16"viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-issue-opened Button-visual"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path></svg>
-            </div>
-            <div className="text-gray-300  hover:text-gray-100 border-gray-200 p-2 h-8 w-8 rounded border" >
-                  <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-git-pull-request Button-visual"><path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"></path></svg>
-          </div>
-            <div className="border-gray-200 p-2 h-8 w-8 rounded border" >
-                   <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-inbox Button-visual"><path d="M2.8 2.06A1.75 1.75 0 0 1 4.41 1h7.18c.7 0 1.333.417 1.61 1.06l2.74 6.395c.04.093.06.194.06.295v4.5A1.75 1.75 0 0 1 14.25 15H1.75A1.75 1.75 0 0 1 0 13.25v-4.5c0-.101.02-.202.06-.295Zm1.61.44a.25.25 0 0 0-.23.152L1.887 8H4.75a.75.75 0 0 1 .6.3L6.625 10h2.75l1.275-1.7a.75.75 0 0 1 .6-.3h2.863L11.82 2.652a.25.25 0 0 0-.23-.152Zm10.09 7h-2.875l-1.275 1.7a.75.75 0 0 1-.6.3h-3.5a.75.75 0 0 1-.6-.3L4.375 9.5H1.5v3.75c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25Z"></path></svg>
-              </div>
-            <img className="w-8 h-8 rounded-full mx-auto" src={user.avatar_url} ></img>
-          </div>
+      <div className="border-gray-200 p-2 h-8 w-14 rounded border flex items-center justify-between cursor-pointer">
+       <svg aria-hidden="true" height="16" fill="currentColor" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-plus">
+    <path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z"></path>
+</svg>
+       <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" fill="currentColor" className="octicon octicon-triangle-down Button-visual">
+    <path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"></path>
+</svg>
+      </div>
+
+      <div className="text-gray-300 border-gray-200 p-2 h-8 w-8 rounded border cursor-pointer">
+        <svg aria-hidden="true" focusable="false" className="octicon octicon-issue-opened vertical-align: text-bottom" viewBox="0 0 16 16" width="16" height="16"display="inline-block" overflow="visible" ><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path></svg>
+      </div>
+
+      <div className="text-gray-400 hover:text-gray-100 border-gray-200 p-2 h-8 w-8 rounded border cursor-pointer">
+       <svg aria-hidden="true" focusable="false" className="octicon octicon-git-pull-request text-gray-400 vertical-align: text-bottom" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" display="inline-block" overflow="visible" ><path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"></path></svg>
+      </div>
+
+    </div>
+
+
+    <div className="flex items-center gap-2">
+      {/* Notification bell */}
+      <div className="text-gray-300 hover:text-gray-700 border-gray-200 p-2 h-8 w-8 rounded border cursor-pointer">
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className="octicon octicon-inbox Button-visual">
+            <path d="M2.8 2.06A1.75 1.75 0 0 1 4.41 1h7.18c.7 0 1.333.417 1.61 1.06l2.74 6.395c.04.093.06.194.06.295v4.5A1.75 1.75 0 0 1 14.25 15H1.75A1.75 1.75 0 0 1 0 13.25v-4.5c0-.101.02-.202.06-.295Zm1.61.44a.25.25 0 0 0-.23.152L1.887 8H4.75a.75.75 0 0 1 .6.3L6.625 10h2.75l1.275-1.7a.75.75 0 0 1 .6-.3h2.863L11.82 2.652a.25.25 0 0 0-.23-.152Zm10.09 7h-2.875l-1.275 1.7a.75.75 0 0 1-.6.3h-3.5a.75.75 0 0 1-.6-.3L4.375 9.5H1.5v3.75c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25Z"></path>
+        </svg>     
+     </div>
+
+      {/* User avatar */}
+      <img
+        className="w-8 h-8 rounded-full cursor-pointer"
+        src={user.avatar_url}
+        alt="User avatar"
+      />
+    </div>
+  </div>
+</div>
+
         </div>
       </header>
        <GitHubTabs/>
         </div>
 
-      <main className="max-w-6xl mx-auto mt-4 grid grid-cols-1 md:grid-cols-4 gap-6">
+<main className="max-w-6xl mx-auto mt-4 px-2 sm:px-4 md:px-6 grid grid-cols-1 md:grid-cols-4 gap-6">
         <aside className="md:col-span-1 space-y-4">
 
           <div className="bg-white p-4 rounded-xl">
@@ -395,134 +409,126 @@ const repoInfo = [
           </div>
 
           {/* CONTRIBUTION GRAPH */}
-          <div className="bg-white p-4 rounded-xl "> 
-              <h2 className="text-m mt-5"> 
-                  {total && (
-                <span>
-                  {total}
-                </span>
-              )} contributions in the last year</h2>
-  
-          <div className="flex gap-6 items-start">
-          {/* LEFT: Heatmap card */}
-           <div className="flex-1 max-w-[750px] flex flex-col">
+         <div className="bg-white p-4 rounded-xl"> 
+  <h2 className="text-m mt-5"> 
+    {total && <span>{total}</span>} contributions in the last year
+  </h2>
 
-  {/* RIGHT-ALIGNED DROPDOWN */}
-  <div className="inline-flex items-center px-2 py-1 ml-auto mt-[-20] hover:text-blue-400 rounded-md">
-    <p className="mr-2 text-right text-gray-600 text-sm">
-      Contribution settings
-    </p>
-    <svg
-      aria-hidden="true"
-      height="16"
-      width="16"
-      viewBox="0 0 16 16"
-      className="octicon octicon-triangle-down"
-    >
-      <path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"/>
-    </svg>
-  </div>
+  {/* Flex container with wrap for responsiveness */}
+  <div className="flex flex-col lg:flex-row flex-wrap gap-6 items-start mt-4">
+    
+    {/* LEFT: Heatmap card */}
+    <div className="flex-1 max-w-[750px] flex flex-col">
+      
+      {/* RIGHT-ALIGNED DROPDOWN (Contribution settings) */}
+      <div className="inline-flex items-center px-2 py-1 ml-auto mt-[-20px] hover:text-blue-400 rounded-md">
+        <p className="mr-2 text-right text-gray-600 text-sm">Contribution settings</p>
+        <svg
+          aria-hidden="true"
+          height="16"
+          width="16"
+          viewBox="0 0 16 16"
+          className="octicon octicon-triangle-down"
+        >
+          <path d="m4.427 7.427 3.396 3.396a.25.25 0 0 0 .354 0l3.396-3.396A.25.25 0 0 0 11.396 7H4.604a.25.25 0 0 0-.177.427Z"/>
+        </svg>
+      </div>
 
-  {/* MAIN BOX */}
-  <div className="border rounded-md border-gray-100 flex flex-col gap-3 mt-3">
+      {/* MAIN BOX */}
+      <div className="border rounded-md border-gray-100 flex flex-col gap-3 mt-3">
+        {/* CHART */}
+        <div className="w-full h-[220px] mt-[-80px] p-1">
+          <ECharts
+            style={{ width: "100%", height: "100%" }}
+            option={{
+              tooltip: {
+                position: "top",
+                formatter: (p: { data: [string, number] }) => {
+                  const [date, count] = p.data;
+                  const [y, m, d] = date.split("-");
+                  const day = parseInt(d, 10);
+                  const monthName = [
+                    "January","February","March","April","May","June",
+                    "July","August","September","October","November","December"
+                  ][parseInt(m, 10) - 1];
+                  const suffix =
+                    day % 10 === 1 && day !== 11 ? "st" :
+                    day % 10 === 2 && day !== 12 ? "nd" :
+                    day % 10 === 3 && day !== 13 ? "rd" : "th";
+                  return `${count} contributions on ${monthName} ${day}${suffix}`;
+                }
+              },
+              visualMap: {
+                min: 0,
+                max: 20,
+                show: false,
+                inRange: { color: ["#ebedf0","#9be9a8","#40c463","#30a14e","#216e39"] }
+              },
+              calendar: {
+                top: 125,
+                left: 40,
+                right: 10,
+                bottom: 10,
+                cellSize: [12, 12],
+                range: githubData.range || ['2024-01-01','2024-12-31'],
+                orient: "horizontal",
+                splitLine: { show: false },
+                itemStyle: { borderWidth: 1, borderColor: "#fff" },
+                yearLabel: { show: false },
+                monthLabel: { nameMap: "en", margin: 10, fontSize: 11 },
+                dayLabel: { margin: 8, fontSize: 12, nameMap: ["", "Mon", "", "Wed", "", "Fri", ""] }
+              },
+              series: [{ type: "heatmap", coordinateSystem: "calendar", data: githubData.heatMapData }]
+            }}
+          />
+        </div>
 
-    {/* CHART */}
-    <div className="w-full h-[220px] mt-[-70] p-1">
-      <ECharts
-        style={{ width: "100%", height: "100%" }}
-        option={{
-          tooltip: {
-            position: "top",
-            formatter: (p: { data: [string, number] }) => {
-              const [date, count] = p.data;
-              const [y, m, d] = date.split("-");
-              const day = parseInt(d, 10);
-              const monthName = [
-                "January","February","March","April","May","June",
-                "July","August","September","October","November","December"
-              ][parseInt(m, 10) - 1];
-              const suffix =
-                day % 10 === 1 && day !== 11 ? "st" :
-                day % 10 === 2 && day !== 12 ? "nd" :
-                day % 10 === 3 && day !== 13 ? "rd" : "th";
-              return `${count} contributions on ${monthName} ${day}${suffix}`;
-            }
-          },
-
-          visualMap: {
-            min: 0,
-            max: 20,
-            show: false,
-            inRange: {
-              color: ["#ebedf0","#9be9a8","#40c463","#30a14e","#216e39"]
-            }
-          },
-
-          calendar: {
-            top: 125,
-            left: 40,
-            right: 10,
-            bottom: 10,
-            cellSize: [12, 12],
-            range: githubData.range || ['2024-01-01','2024-12-31'],
-            orient: "horizontal",
-            splitLine: { show: false },
-            itemStyle: { borderWidth: 1, borderColor: "#fff" },
-            yearLabel: { show: false },
-            monthLabel: { nameMap: "en", margin: 10, fontSize: 11 },
-            dayLabel: {
-              margin: 8,
-              fontSize: 12,
-              nameMap: ["", "Mon", "", "Wed", "", "Fri", ""],
-            }
-          },
-
-          series: [
-            {
-              type: "heatmap",
-              coordinateSystem: "calendar",
-              data: githubData.heatMapData,
-            }
-          ]
-        }}
-      />
+        <p className="text-xs ml-11 mt-[-14px] mb-5 hover:text-blue-400 text-gray-600">
+          Learn how we count contributions
+        </p>
+        <p className="text-xs mt-[-48px] mr-18 mb-5 hover:text-blue-400 text-right text-gray-600">
+          Less More
+        </p>
+      </div>
     </div>
 
-    <p className="text-xs ml-11 mt-[-14] mb-5 hover:text-blue-400 text-gray-600">
-      Learn how we count contributions
-    </p>
-       <p className="text-xs mt-[-48] mr-18 mb-5 hover:text-blue-400 text-right text-gray-600">
-      Less More
-    </p>
+    {/* RIGHT: Year selector */}
+    <div className="lg:w-25 w-full mt-2 lg:mt-[-25px]">
+      {/* Small screen dropdown */}
+      <div className="block lg:hidden px-2 py-1">
+        <select
+          defaultValue="2025"
+          className="w-full border rounded-md px-2 py-2 text-sm text-gray-700"
+        >
+          {["2025","2024","2023","2022","2021","2020","2019","2018","2017","2016","2015","2014","2013"].map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
+      </div>
 
+      {/* Large screen vertical list */}
+      <div className="hidden lg:block p-2">
+        <ul className="space-y-3 text-sm pl-1">
+          {["2025","2024","2023","2022","2021","2020","2019","2018","2017","2016","2015","2014","2013"].map((y, idx) => (
+            <li
+              key={y}
+              className={`text-center px-2 py-2 rounded-md text-sm cursor-pointer ${
+                idx === 0 ? "bg-blue-600 text-white font-medium" : "bg-white hover:bg-gray-100 text-gray-700"
+              }`}
+            >
+              {y}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 
-
-          {/* RIGHT: Year selector */}
-          <div className="w-28 mt-[-25] ">
-            <div className="p-2">
-              <ul className="space-y-3 text-sm pl-1">
-                {["2025","2024","2023","2022","2021","2020","2019","2018","2017","2016","2015","2014","2013"].map((y, idx) => (
-                    <li
-                      key={y}
-                      className={`text-center px-2 py-2 rounded-md text-sm ${
-                        idx === 0 ? "bg-blue-600 text-white font-medium" : "bg-white hover:bg-gray-100 text-gray-700"
-                      }`}
-                        >
-                          {y}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-          </div>
         </section>
       </main>
-      <footer className="mt-10 py-6 border-t border-gray-200 text-gray-500">
-  <div className="max-w-6xl mx-auto flex items-center justify-center gap-6 text-sm">
+<footer className="mt-10 mx-5 lg:mt-16 py-6 border-t border-gray-200 text-gray-500">
+  <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-6 text-sm">
 
     {/* GitHub logo */}
    <svg aria-hidden="true" height="24" viewBox="0 0 24 24" version="1.1" width="24" data-view-component="true" className="octicon octicon-mark-github">
