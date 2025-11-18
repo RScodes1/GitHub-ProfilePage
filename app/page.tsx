@@ -408,20 +408,16 @@ const repoInfo = [
             </div>
           </div>
 
-          {/* CONTRIBUTION GRAPH */}
          <div className="bg-white p-4 rounded-xl"> 
   <h2 className="text-m mt-5"> 
     {total && <span>{total}</span>} contributions in the last year
   </h2>
 
-  {/* Flex container with wrap for responsiveness */}
   <div className="flex flex-col lg:flex-row flex-wrap gap-6 items-start mt-4">
     
-    {/* LEFT: Heatmap card */}
     <div className="flex-1 max-w-[750px] flex flex-col">
       
-      {/* RIGHT-ALIGNED DROPDOWN (Contribution settings) */}
-      <div className="inline-flex items-center px-2 py-1 ml-auto mt-[-20px] hover:text-blue-400 rounded-md">
+      <div className="inline-flex items-center px-2 py-1 ml-auto mt-[-40px] hover:text-blue-400 rounded-md">
         <p className="mr-2 text-right text-gray-600 text-sm">Contribution settings</p>
         <svg
           aria-hidden="true"
